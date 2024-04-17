@@ -28,8 +28,9 @@ const getPosts = async (token = _userToken) => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        response
-        return response.data;
+        console.log(process.env.REACT_APP_API_BASE);
+        return response.data.data;
+        
     } catch (error) {
         return error.response.data;
     }
