@@ -5,67 +5,35 @@ const _postRoute = "/posts";
 const _loginUrl = _apiBase + _loginRoute;
 const _registerUrl = _apiBase + _registerRoute;
 const _postUrl = _apiBase + _postRoute;
+const _userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEzMzQxNzQ2LCJleHAiOjE3MTU5MzM3NDZ9.uYOd9evaIPltsUEWy2sKmovUG59rl9N8fzfIkjM2-Ek"
 
 import axios from "axios";
 
-const urlGet = async (url) => {
-    const response = await fetch(url, {
-        method: "GET",
-        body: null,
-        headers: { "Content-Type": "aplication/json" },
-    });
-    const data = await response.json();
-    return data;
+const loginUser = async (email, password) => {
+    try {
+        const response = await axios.post(_loginUrl, {
+            identifier: email,
+            password: password,
+        });
+        return response.data;
+    } catch (error) {
+        return error.response.data;
+    }
 };
 
-const urlPost = async (url, username, password) => {
-    const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({ identifier: username, password: password }),
-        headers: { "Content-Type": "aplication/json" },
-    });
-    const data = await response.json();
-    return data;
+const getPosts = async (token = _userToken) => {
+    try {
+        const response = await axios.get(_postUrl, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        response
+        return response.data;
+    } catch (error) {
+        return error.response.data;
+    }
 };
 
-// urlPost(_loginUrl, "user", "User12345").then((data) => console.log(data));
-
-// fetch("http://localhost:1337/api/auth/local", {
-//     // method: "POST",
-//     // headers: {
-//     //     "Content-Type": "aplication/json"
-//     // },
-//     // body: JSON.stringify({
-//     //     identifier: "user",
-//     //     password: "User12345",
-//     // }),
-//     identifier: "user",
-//     password: "User12345",
-// })
-//     .then((response) => response.json()) // обрабатываем ответ в формате JSON
-//     .then((data) => {
-//         console.log(data);
-//     })
-//     .catch((error) => {
-//         console.error(error);
-//     });
-
-const axios = require("axios");
-
-axios
-  .post('http://localhost:1337/api/auth/local', {
-    identifier: 'user@user.com',
-    password: 'User12345',
-  })
-  .then(response => {
-    // Handle success.
-    console.log(response.data)
-    console.log('Well done!');
-    console.log('User profile', response.data.user);
-    console.log('User token', response.data.jwt);
-  })
-  .catch(error => {
-    // Handle error.
-    console.log('An error occurred:', error.response);
-  });
+export { loginUser, getPosts };
 
